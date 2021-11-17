@@ -1,6 +1,13 @@
 # Liferay Setup Script
 Script for setting up a Liferay Portal
 
+## What it does?
+1. downloads Liferay bundle with the following command
+```shell
+blade gw initBundle
+```
+2. gets properties file from the selected environment, sets liferay.home and database url name properties and inserts it inside `bundles`
+
 ## Requirements
 - python 3
 - blade 4.0.9.202107011607

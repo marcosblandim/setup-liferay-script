@@ -11,14 +11,17 @@ PROPERTIES_FILENAME = 'portal-ext.properties'
 
 # get args
 parser = argparse.ArgumentParser(description='Setup Liferay gradle workspace.')
-parser.add_argument('-d', '--database', default='lportal', help='database name')
+parser.add_argument('-d', '--database', default='lportal',
+                    help='database name')
 parser.add_argument('-e', '--environment', default='dev',
-                    choices=['common', 'dev', 'docker', 'local', 'prod','uat'],
+                    choices=['common', 'dev', 'docker',
+                             'local', 'prod', 'uat'],
                     help='portal environment')
 parser.add_argument('-l', '--log-level', default=DEFAULT_LOG_LEVEL,
-                    choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET'],
-                    type= str.upper,
-                              help='set log level')
+                    choices=['CRITICAL', 'ERROR', 'WARNING',
+                             'INFO', 'DEBUG', 'NOTSET'],
+                    type=str.upper,
+                    help='set log level')
 
 args = parser.parse_args()
 
@@ -42,6 +45,7 @@ bundles_path = os.path.join(this_file_folder_path, 'bundles')
 def have_bundles():
     return os.path.isdir(bundles_path)
 
+
 def create_bundles():
     subprocess.run('blade gw initBundle', cwd=this_file_folder_path)
 
@@ -50,7 +54,8 @@ if __name__ == '__main__':
     if not have_bundles():
         create_bundles()
 
-    properties_file_path = os.path.join(this_file_folder_path, 'configs', portal_environment, PROPERTIES_FILENAME)
+    properties_file_path = os.path.join(
+        this_file_folder_path, 'configs', portal_environment, PROPERTIES_FILENAME)
     properties_file_exists = os.path.isfile(properties_file_path)
 
     if not properties_file_exists:
@@ -65,12 +70,15 @@ if __name__ == '__main__':
     config.read_string(properties_with_section)
 
     # TODO: see if this affects linux
-    config.set(placeholder_section_name, 'liferay.home', bundles_path.replace('\\','/'))
+    config.set(placeholder_section_name, 'liferay.home',
+               bundles_path.replace('\\', '/'))
 
     # TODO: improve database naming
-    config.set(placeholder_section_name, 'jdbc.default.url', f'jdbc:postgresql://localhost:5432/{database_name}') #
+    config.set(placeholder_section_name, 'jdbc.default.url',
+               f'jdbc:postgresql://localhost:5432/{database_name}')
 
-    bundles_properties_file_path = os.path.join(bundles_path, PROPERTIES_FILENAME)
+    bundles_properties_file_path = os.path.join(
+        bundles_path, PROPERTIES_FILENAME)
     with open(bundles_properties_file_path, 'w+') as bundles_properties_file:
         config.write(bundles_properties_file)
     with open(bundles_properties_file_path, 'r') as fi:

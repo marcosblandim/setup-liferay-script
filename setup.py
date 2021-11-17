@@ -10,18 +10,19 @@ DEFAULT_LOG_LEVEL = 'INFO'
 PROPERTIES_FILENAME = 'portal-ext.properties'
 
 # get args
-parser = argparse.ArgumentParser(description='Setup Liferay gradle workspace.')
+github_url = 'https://github.com/marcosblandim/setup-liferay-script/'
+parser = argparse.ArgumentParser(description='Setup Liferay gradle workspace.',
+                                 epilog=f'for the project docs, go to {github_url}')
+parser.add_argument('-l', '--log-level', default=DEFAULT_LOG_LEVEL,
+                    choices=['CRITICAL', 'ERROR', 'WARNING',
+                             'INFO', 'DEBUG', 'NOTSET'],
+                    type=str.upper, help='set log level')
 parser.add_argument('-d', '--database', default='lportal',
                     help='database name')
 parser.add_argument('-e', '--environment', default='dev',
                     choices=['common', 'dev', 'docker',
                              'local', 'prod', 'uat'],
                     help='portal environment')
-parser.add_argument('-l', '--log-level', default=DEFAULT_LOG_LEVEL,
-                    choices=['CRITICAL', 'ERROR', 'WARNING',
-                             'INFO', 'DEBUG', 'NOTSET'],
-                    type=str.upper,
-                    help='set log level')
 
 args = parser.parse_args()
 

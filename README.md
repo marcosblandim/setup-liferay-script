@@ -22,3 +22,7 @@ python setup.py
 ```shell
 python setup.py --help
 ```
+
+## Future improvements
+- make it possible to pass all fields available in wizard setup
+- let user choose which database driver to use

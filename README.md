@@ -24,5 +24,10 @@ python setup.py --help
 ```
 
 ## Future improvements
-- make it possible to pass all fields available in wizard setup
-- let user choose which database driver to use
+- make it possible to pass all fields available in wizard setup, even the database driver (see portal-impl properties file)
+  - have default value for all fields
+- refact: extract functions 
+- add new env option called wiz (wizard), that uses the properties and values of a default wizard file, instead of using the properties file inside a env from the config folder
+  - stores the wizard properties in a string inside the script
+- improve this README (mainly the usage)
+- add the option to create the database and the portal in a docker

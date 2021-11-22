@@ -31,3 +31,4 @@ python setup.py --help
   - stores the wizard properties in a string inside the script
 - improve this README (mainly the usage)
 - add the option to create the database and the portal in a docker
+- implement option for deploying the database in a docker

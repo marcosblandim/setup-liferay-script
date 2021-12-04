@@ -30,6 +30,4 @@ python setup.py --help
   - [usage](#usage)
 - make it works for many versions (currently only works on 7.3)
 - add the option to create the database and the portal in a docker
-- implement option for deploying the database inside a docker container
-- implement option for deploying the liferay portal inside a docker container
 - improve logging

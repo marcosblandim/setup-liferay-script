@@ -2,7 +2,7 @@
 Script for setting up a Liferay Portal
 
 ## What it does?
-1. downloads Liferay bundle (if it doesn's exists yet) with the following command
+1. downloads Liferay bundle (if it doesn't exists yet) with the following command
 ```shell
 blade gw initBundle
 ```

@@ -2,11 +2,11 @@
 Script for setting up a Liferay Portal
 
 ## What it does?
-1. downloads Liferay bundle with the following command
+1. downloads Liferay bundle (if it doesn's exists yet) with the following command
 ```shell
 blade gw initBundle
 ```
-2. gets properties file from the selected environment, sets liferay.home and database url name properties and inserts it inside `bundles`
+2. gets the properties from the selected environment, sets liferay.home and database url name properties and inserts it in a `portal-ext.properties` file inside `bundles`
 
 ## Requirements
 - python 3
@@ -26,10 +26,12 @@ python setup.py --help
 ## Future improvements
 - make it possible to pass all fields available in wizard setup, even the database driver (see portal-impl properties file)
   - have default value for all fields
-- refact: extract functions 
 - add new env option called wiz (wizard), that uses the properties and values of a default wizard file, instead of using the properties file inside a env from the config folder
   - stores the wizard properties in a string inside the script
-- improve this README (mainly the usage)
+- improve docs
+  - [usage](#usage)
+- make it works for many versions (currently only works on 7.3)
 - add the option to create the database and the portal in a docker
 - implement option for deploying the database inside a docker container
 - implement option for deploying the liferay portal inside a docker container
+- improve logging

@@ -11,6 +11,23 @@ PROPERTIES_FILENAME = 'portal-ext.properties'
 SCRIPT_BLADE_VERSION = (4, 0, 9)
 
 PLACEHOLDER_SECTION_NAME = 'placeholder'
+WIZ_ENV = 'wiz'
+WIZ_PROPERTIES = '''include-and-override=portal-developer.properties
+
+admin.email.from.address=test@liferay.com
+admin.email.from.name=Test Test
+company.default.locale=en_US
+company.default.time.zone=UTC
+company.default.web.id=liferay.com
+default.admin.email.address.prefix=test
+
+jdbc.default.driverClassName=org.postgresql.Driver
+jdbc.default.password=postgres
+jdbc.default.url=jdbc:postgresql://localhost:5432/lportal
+jdbc.default.username=postgres
+
+#liferay.home=
+setup.wizard.enabled=false'''
 
 
 # parse args
@@ -23,9 +40,9 @@ parser.add_argument('-l', '--log-level', default=DEFAULT_LOG_LEVEL,
                     type=str.upper, help='set log level')
 parser.add_argument('-d', '--database', default='lportal',
                     help='database name')
-parser.add_argument('-e', '--environment', default='dev',
+parser.add_argument('-e', '--environment', default=WIZ_ENV,
                     choices=['common', 'dev', 'docker',
-                             'local', 'prod', 'uat'],
+                             'local', 'prod', 'uat', WIZ_ENV],
                     help='portal environment')
 
 args = parser.parse_args()
@@ -82,24 +99,33 @@ def handle_bundles():
         logging.info('bundles folder already exists')
 
 def get_properties():
-    properties_file_path = os.path.join(
-        this_file_folder_path, 'configs', portal_environment, PROPERTIES_FILENAME)
-    properties_file_exists = os.path.isfile(properties_file_path)
+    if portal_environment != WIZ_ENV:
+        properties_file_path = os.path.join(
+            this_file_folder_path, 'configs', portal_environment, PROPERTIES_FILENAME)
+        properties_file_exists = os.path.isfile(properties_file_path)
 
-    if not properties_file_exists:
-        logging.error(f'{properties_file_path} file do not exists')
-        sys.exit(1)
+        if not properties_file_exists:
+            logging.error(f'{properties_file_path} file do not exists')
+            sys.exit(1)
 
-    logging.info(
-        f'reading properties file from \'{portal_environment}\' environment')
+        with open(properties_file_path, 'r') as f:
+            properties = f.read()
+        
+        logging.info(
+            f'reading properties file from \'{portal_environment}\' environment')
+        logging.debug(f'properties file is located at {properties_file_path}')
+
+    else:
+        properties = WIZ_PROPERTIES
+        logging.info(
+            f'using wizard\'s default properties')
+
+    properties_with_section = f'[{PLACEHOLDER_SECTION_NAME}]\n' + properties
+    
     config = configparser.ConfigParser()
     config.optionxform = str  # set case insensitive
 
-    with open(properties_file_path, 'r') as f:
-        properties_with_section = f'[{PLACEHOLDER_SECTION_NAME}]\n' + f.read()
-
     config.read_string(properties_with_section)
-
     config.set(PLACEHOLDER_SECTION_NAME, 'liferay.home',
                bundles_path.replace('\\', '/'))
 
@@ -111,6 +137,7 @@ def get_properties():
 
 def set_properties(config):
     logging.info('inserting properties file inside bundles folder')
+    logging.debug(f'bundles folder is located at {bundles_path}')
     bundles_properties_file_path = os.path.join(
         bundles_path, PROPERTIES_FILENAME)
     with open(bundles_properties_file_path, 'w+') as bundles_properties_file:

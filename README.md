@@ -26,8 +26,6 @@ python setup.py --help
 ## Future improvements
 - make it possible to pass all fields available in wizard setup, even the database driver (see portal-impl properties file)
   - have default value for all fields
-- add new env option called wiz (wizard), that uses the properties and values of a default wizard file, instead of using the properties file inside a env from the config folder
-  - stores the wizard properties in a string inside the script
 - improve docs
   - [usage](#usage)
 - make it works for many versions (currently only works on 7.3)

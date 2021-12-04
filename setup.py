@@ -10,7 +10,10 @@ DEFAULT_LOG_LEVEL = 'INFO'
 PROPERTIES_FILENAME = 'portal-ext.properties'
 SCRIPT_BLADE_VERSION = (4, 0, 9)
 
-# get args
+PLACEHOLDER_SECTION_NAME = 'placeholder'
+
+
+# parse args
 github_url = 'https://github.com/marcosblandim/setup-liferay-script/'
 parser = argparse.ArgumentParser(description='Setup Liferay gradle workspace.',
                                  epilog=f'for the project docs, go to {github_url}')
@@ -63,8 +66,7 @@ def have_bundles():
 def create_bundles():
     subprocess.run('blade gw initBundle', cwd=this_file_folder_path)
 
-
-if __name__ == '__main__':
+def validate():
     if not validate_versions():
         valid_blade_version = '.'.join(str(version_unit)
                                        for version_unit in SCRIPT_BLADE_VERSION)
@@ -72,12 +74,14 @@ if __name__ == '__main__':
             f'invalid blade version, must be greater than {valid_blade_version}. Run \'blade update\'')
         sys.exit(1)
 
+def handle_bundles():
     if not have_bundles():
         logging.info('creating bundles folder')
         create_bundles()
     else:
         logging.info('bundles folder already exists')
 
+def get_properties():
     properties_file_path = os.path.join(
         this_file_folder_path, 'configs', portal_environment, PROPERTIES_FILENAME)
     properties_file_exists = os.path.isfile(properties_file_path)
@@ -88,22 +92,24 @@ if __name__ == '__main__':
 
     logging.info(
         f'reading properties file from \'{portal_environment}\' environment')
-    placeholder_section_name = 'placeholder'
     config = configparser.ConfigParser()
     config.optionxform = str  # set case insensitive
 
     with open(properties_file_path, 'r') as f:
-        properties_with_section = f'[{placeholder_section_name}]\n' + f.read()
+        properties_with_section = f'[{PLACEHOLDER_SECTION_NAME}]\n' + f.read()
 
     config.read_string(properties_with_section)
 
-    config.set(placeholder_section_name, 'liferay.home',
+    config.set(PLACEHOLDER_SECTION_NAME, 'liferay.home',
                bundles_path.replace('\\', '/'))
 
     # TODO: improve database naming
-    config.set(placeholder_section_name, 'jdbc.default.url',
+    config.set(PLACEHOLDER_SECTION_NAME, 'jdbc.default.url',
                f'jdbc:postgresql://localhost:5432/{database_name}')
 
+    return config
+
+def set_properties(config):
     logging.info('inserting properties file inside bundles folder')
     bundles_properties_file_path = os.path.join(
         bundles_path, PROPERTIES_FILENAME)
@@ -112,4 +118,13 @@ if __name__ == '__main__':
     with open(bundles_properties_file_path, 'r') as fi:
         properties_file_content = fi.read().splitlines(True)
     with open(bundles_properties_file_path, 'w') as fo:
-        fo.writelines(properties_file_content[1:])
+        fo.writelines(properties_file_content[1:]) # remove section
+
+
+if __name__ == '__main__':
+
+    validate()
+    handle_bundles()
+
+    config = get_properties()
+    set_properties(config)

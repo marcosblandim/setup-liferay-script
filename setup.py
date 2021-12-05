@@ -66,7 +66,8 @@ bundles_path = os.path.join(this_file_folder_path, 'bundles')
 
 def validate_versions():
     blade_version_bytes = subprocess.run(
-        'blade version', stdout=subprocess.PIPE, cwd=this_file_folder_path)
+        'blade version', stdout=subprocess.PIPE, 
+        cwd=this_file_folder_path, shell=True)
     blade_version = blade_version_bytes.stdout.decode('utf-8')
 
     blade_version_str_list = blade_version.split()[-1].split('.')
@@ -81,7 +82,7 @@ def have_bundles():
 
 
 def create_bundles():
-    subprocess.run('blade gw initBundle', cwd=this_file_folder_path)
+    subprocess.run('blade gw initBundle', cwd=this_file_folder_path, shell=True)
 
 def validate():
     if not validate_versions():

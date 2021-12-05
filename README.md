@@ -6,7 +6,7 @@ Script for setting up a Liferay Portal
 ```shell
 blade gw initBundle
 ```
-2. gets the properties from the selected environment, sets liferay.home and database url name properties and inserts it in a `portal-ext.properties` file inside `bundles`
+2. gets the properties from the selected environment, sets liferay.home and database url name properties and inserts it in a `portal-ext.properties` file inside `bundles` folder
 
 ## Requirements
 - python 3

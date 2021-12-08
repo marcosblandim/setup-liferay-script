@@ -32,3 +32,4 @@ python setup.py --help
 - add the option to create the database and the portal in a docker
 - improve logging
 - external bundle option -> use bundle located outside the workspace
+    - validate `liferay.workspace.home.dir` inside `gradle.properties` file

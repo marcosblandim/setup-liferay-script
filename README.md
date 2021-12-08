@@ -31,3 +31,4 @@ python setup.py --help
 - make it works for many versions (currently only works on 7.3)
 - add the option to create the database and the portal in a docker
 - improve logging
+- external bundle option -> use bundle located outside the workspace

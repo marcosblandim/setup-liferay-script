@@ -33,6 +33,6 @@ python setup.py --help
 - improve logging
 - external bundle option -> use bundle located outside the workspace
     - validate `liferay.workspace.home.dir` inside `gradle.properties` file
-- check if blade gw initBundle executed correctly
 - flag for reseting `bundles` folder
 - implement testing
+- flag for passing the workspace dir -> defaults to script or the curr location

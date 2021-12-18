@@ -65,10 +65,14 @@ bundles_path = os.path.join(this_file_folder_path, 'bundles')
 
 
 def validate_versions():
-    blade_version_bytes = subprocess.run(
+    blade_version_process = subprocess.run(
         'blade version', stdout=subprocess.PIPE,
         cwd=this_file_folder_path, shell=True)
-    blade_version = blade_version_bytes.stdout.decode('utf-8')
+
+    validate_return_code(blade_version_process.returncode,
+                         'couldn\'t validate blade\'s version, exiting')
+
+    blade_version = blade_version_process.stdout.decode('utf-8')
 
     blade_version_str_list = blade_version.split()[-1].split('.')
     blade_version_int_tuple = tuple(int(str_version)
@@ -82,8 +86,10 @@ def have_bundles():
 
 
 def create_bundles():
-    subprocess.run('blade gw initBundle',
-                   cwd=this_file_folder_path, shell=True)
+    process = subprocess.run('blade gw initBundle',
+                             cwd=this_file_folder_path, shell=True)
+    validate_return_code(process.returncode,
+                         'couldn\'t create bundle, exiting')
 
 
 def validate():
@@ -152,6 +158,12 @@ def set_properties(config):
         properties_file_content = fi.read().splitlines(True)
     with open(bundles_properties_file_path, 'w') as fo:
         fo.writelines(properties_file_content[1:])  # remove section
+
+
+def validate_return_code(return_code, error_msg):
+    if return_code != 0:
+        logging.error(error_msg)
+        sys.exit(return_code)
 
 
 if __name__ == '__main__':

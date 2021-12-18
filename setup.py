@@ -66,7 +66,7 @@ bundles_path = os.path.join(this_file_folder_path, 'bundles')
 
 def validate_versions():
     blade_version_bytes = subprocess.run(
-        'blade version', stdout=subprocess.PIPE, 
+        'blade version', stdout=subprocess.PIPE,
         cwd=this_file_folder_path, shell=True)
     blade_version = blade_version_bytes.stdout.decode('utf-8')
 
@@ -82,7 +82,9 @@ def have_bundles():
 
 
 def create_bundles():
-    subprocess.run('blade gw initBundle', cwd=this_file_folder_path, shell=True)
+    subprocess.run('blade gw initBundle',
+                   cwd=this_file_folder_path, shell=True)
+
 
 def validate():
     if not validate_versions():
@@ -92,12 +94,14 @@ def validate():
             f'invalid blade version, must be greater than {valid_blade_version}. Run \'blade update\'')
         sys.exit(1)
 
+
 def handle_bundles():
     if not have_bundles():
         logging.info('creating bundles folder')
         create_bundles()
     else:
         logging.info('bundles folder already exists')
+
 
 def get_properties():
     if portal_environment != WIZ_ENV:
@@ -111,7 +115,7 @@ def get_properties():
 
         with open(properties_file_path, 'r') as f:
             properties = f.read()
-        
+
         logging.info(
             f'reading properties file from \'{portal_environment}\' environment')
         logging.debug(f'properties file is located at {properties_file_path}')
@@ -122,7 +126,7 @@ def get_properties():
             f'using wizard\'s default properties')
 
     properties_with_section = f'[{PLACEHOLDER_SECTION_NAME}]\n' + properties
-    
+
     config = configparser.ConfigParser()
     config.optionxform = str  # set case insensitive
 
@@ -136,6 +140,7 @@ def get_properties():
 
     return config
 
+
 def set_properties(config):
     logging.info('inserting properties file inside bundles folder')
     logging.debug(f'bundles folder is located at {bundles_path}')
@@ -146,7 +151,7 @@ def set_properties(config):
     with open(bundles_properties_file_path, 'r') as fi:
         properties_file_content = fi.read().splitlines(True)
     with open(bundles_properties_file_path, 'w') as fo:
-        fo.writelines(properties_file_content[1:]) # remove section
+        fo.writelines(properties_file_content[1:])  # remove section
 
 
 if __name__ == '__main__':

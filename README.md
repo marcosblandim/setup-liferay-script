@@ -35,4 +35,4 @@ python setup.py --help
     - validate `liferay.workspace.home.dir` inside `gradle.properties` file
 - flag for reseting `bundles` folder
 - implement testing
-- flag for passing the workspace dir -> defaults to script or the curr location
+- fix args help text

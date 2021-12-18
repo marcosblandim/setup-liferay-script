@@ -4,6 +4,7 @@ import configparser
 import argparse
 import sys
 import os
+import pathlib
 
 
 DEFAULT_LOG_LEVEL = 'INFO'
@@ -44,30 +45,34 @@ parser.add_argument('-e', '--environment', default=WIZ_ENV,
                     choices=['common', 'dev', 'docker',
                              'local', 'prod', 'uat', WIZ_ENV],
                     help='portal environment')
+parser.add_argument('workspace_path', default='.',
+                    type=pathlib.Path, nargs='?',
+                    help='path to a Liferay Gradle Workspace')
 
 args = parser.parse_args()
 
 database_name = args.database
 portal_environment = args.environment
 log_lever = args.log_level
+workspace_path = args.workspace_path.resolve()
 
 # config logging
 numeric_level = getattr(logging, log_lever.upper(), DEFAULT_LOG_LEVEL)
 logging.basicConfig(format='%(levelname)s: %(message)s', level=numeric_level)
 
-# get this file folder path
-if sys.version_info >= (3, 9):
-    this_file_folder_path = os.path.split(__file__)[0]
-else:
-    this_file_folder_path = os.path.dirname(os.path.abspath(__file__))
+# parse paths
+if not workspace_path.is_dir():
+    logging.error(f'invalid workspace path \'{workspace_path}\', exiting')
+    sys.exit(1)
 
-bundles_path = os.path.join(this_file_folder_path, 'bundles')
+bundles_path = workspace_path / 'bundles'
+bundles_properties_file_path = bundles_path / PROPERTIES_FILENAME
 
 
 def validate_versions():
     blade_version_process = subprocess.run(
         'blade version', stdout=subprocess.PIPE,
-        cwd=this_file_folder_path, shell=True)
+        cwd=workspace_path, shell=True)
 
     validate_return_code(blade_version_process.returncode,
                          'couldn\'t validate blade\'s version, exiting')
@@ -82,12 +87,12 @@ def validate_versions():
 
 
 def have_bundles():
-    return os.path.isdir(bundles_path)
+    return bundles_path.is_dir()
 
 
 def create_bundles():
     process = subprocess.run('blade gw initBundle',
-                             cwd=this_file_folder_path, shell=True)
+                             cwd=workspace_path, shell=True)
     validate_return_code(process.returncode,
                          'couldn\'t create bundle, exiting')
 
@@ -111,11 +116,10 @@ def handle_bundles():
 
 def get_properties():
     if portal_environment != WIZ_ENV:
-        properties_file_path = os.path.join(
-            this_file_folder_path, 'configs', portal_environment, PROPERTIES_FILENAME)
-        properties_file_exists = os.path.isfile(properties_file_path)
+        properties_file_path = bundles_path / 'configs' / \
+            portal_environment / PROPERTIES_FILENAME
 
-        if not properties_file_exists:
+        if not properties_file_path.is_file():
             logging.error(f'{properties_file_path} file do not exists')
             sys.exit(1)
 
@@ -138,7 +142,7 @@ def get_properties():
 
     config.read_string(properties_with_section)
     config.set(PLACEHOLDER_SECTION_NAME, 'liferay.home',
-               bundles_path.replace('\\', '/'))
+               bundles_path.as_posix())
 
     # TODO: improve database naming
     config.set(PLACEHOLDER_SECTION_NAME, 'jdbc.default.url',
@@ -150,8 +154,7 @@ def get_properties():
 def set_properties(config):
     logging.info('inserting properties file inside bundles folder')
     logging.debug(f'bundles folder is located at {bundles_path}')
-    bundles_properties_file_path = os.path.join(
-        bundles_path, PROPERTIES_FILENAME)
+
     with open(bundles_properties_file_path, 'w+') as bundles_properties_file:
         config.write(bundles_properties_file)
     with open(bundles_properties_file_path, 'r') as fi:

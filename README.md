@@ -36,3 +36,6 @@ python setup.py --help
 - flag for reseting `bundles` folder
 - implement testing
 - fix args help text
+- validate workspace folder (https://github.com/liferay/liferay-blade-cli/blob/feaeddf8251999c262e3004cc8675bc82eb09c7e/cli/src/main/java/com/liferay/blade/cli/gradle/GradleWorkspaceProvider.java#L250)
+- generate executable
+- use some commit name validator

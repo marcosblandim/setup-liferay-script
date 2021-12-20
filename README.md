@@ -1,5 +1,5 @@
 # Liferay Setup Script
-Script for setting up a Liferay Portal
+Multi platform script for setting up a Liferay Portal
 
 ## What it does?
 1. downloads Liferay bundle (if it doesn't exists yet) with the following command
@@ -46,3 +46,6 @@ python setup.py --log-level DEBUG -d lportal -e dev /some/liferay/gradle/workspa
 - validate workspace folder (https://github.com/liferay/liferay-blade-cli/blob/feaeddf8251999c262e3004cc8675bc82eb09c7e/cli/src/main/java/com/liferay/blade/cli/gradle/GradleWorkspaceProvider.java#L250)
 - generate executable
 - use some commit name validator
+- dynamically check if blade is in the latest version
+- add 3 missing properties: company.default.name (default site name), default.admin.first.name and default.admin.last.name (default admin first and last name)
+- should the wizard env have de dev properties?

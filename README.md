@@ -9,18 +9,25 @@ blade gw initBundle
 2. gets the properties from the selected environment, sets liferay.home and database url name properties and inserts it in a `portal-ext.properties` file inside `bundles` folder
 
 ## Requirements
-- python 3
-- blade 4.0.9.202107011607
-- must be executed from the root of a Liferay Gradle Workspace
+- python ^3
+- blade ^4.0.9 
 
 ## Usage
-- the following command runs the script with the default values
+- executes the script with the default values
 ```shell
 python setup.py
 ```
-- use the following command to get help about the script
+- get help
 ```shell
 python setup.py --help
+```
+> the same can be achieved by executing the folder instead of the script
+```shell
+python liferay-setup-script --help
+```
+- usage example
+```shell
+python setup.py --log-level DEBUG -d lportal -e dev /some/liferay/gradle/workspace/path
 ```
 
 ## Future improvements

@@ -3,7 +3,6 @@ import subprocess
 import configparser
 import argparse
 import sys
-import os
 import pathlib
 
 
@@ -169,10 +168,13 @@ def validate_return_code(return_code, error_msg):
         sys.exit(return_code)
 
 
-if __name__ == '__main__':
-
+def main():
     validate()
     handle_bundles()
 
     config = get_properties()
     set_properties(config)
+
+
+if __name__ == '__main__':
+    main()

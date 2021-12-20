@@ -8,7 +8,7 @@ import pathlib
 
 DEFAULT_LOG_LEVEL = 'INFO'
 PROPERTIES_FILENAME = 'portal-ext.properties'
-SCRIPT_BLADE_VERSION = (4, 0, 9)
+BLADE_MIN_VERSION = (4, 0, 9)
 
 PLACEHOLDER_SECTION_NAME = 'placeholder'
 WIZ_ENV = 'wiz'
@@ -32,21 +32,16 @@ setup.wizard.enabled=false'''
 
 # parse args
 github_url = 'https://github.com/marcosblandim/setup-liferay-script/'
-parser = argparse.ArgumentParser(description='Setup Liferay gradle workspace.',
-                                 epilog=f'for the project docs, go to {github_url}')
-parser.add_argument('-l', '--log-level', default=DEFAULT_LOG_LEVEL,
-                    choices=['CRITICAL', 'ERROR', 'WARNING',
-                             'INFO', 'DEBUG', 'NOTSET'],
-                    type=str.upper, help='set log level')
+parser = argparse.ArgumentParser(
+    description='Setup Liferay gradle workspace.', epilog=f'for the project docs, go to {github_url}')
+parser.add_argument('-l', '--log-level', default=DEFAULT_LOG_LEVEL, type=str.upper,
+                    choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET'], help='set log level')
 parser.add_argument('-d', '--database', default='lportal',
                     help='database name')
-parser.add_argument('-e', '--environment', default=WIZ_ENV,
-                    choices=['common', 'dev', 'docker',
-                             'local', 'prod', 'uat', WIZ_ENV],
-                    help='portal environment')
-parser.add_argument('workspace_path', default='.',
-                    type=pathlib.Path, nargs='?',
-                    help='path to a Liferay Gradle Workspace')
+parser.add_argument('-e', '--environment', default=WIZ_ENV, type=str.lower, choices=[
+                    'common', 'dev', 'docker', 'local', 'prod', 'uat', WIZ_ENV], help='portal environment')
+parser.add_argument('workspace_path', nargs='?', default='.',
+                    type=pathlib.Path, help='path to a Liferay Gradle Workspace')
 
 args = parser.parse_args()
 
@@ -82,7 +77,7 @@ def validate_versions():
     blade_version_int_tuple = tuple(int(str_version)
                                     for str_version in blade_version_str_list)
 
-    return blade_version_int_tuple >= SCRIPT_BLADE_VERSION
+    return blade_version_int_tuple >= BLADE_MIN_VERSION
 
 
 def have_bundles():
@@ -99,7 +94,7 @@ def create_bundles():
 def validate():
     if not validate_versions():
         valid_blade_version = '.'.join(str(version_unit)
-                                       for version_unit in SCRIPT_BLADE_VERSION)
+                                       for version_unit in BLADE_MIN_VERSION)
         logging.error(
             f'invalid blade version, must be greater than {valid_blade_version}. Run \'blade update\'')
         sys.exit(1)

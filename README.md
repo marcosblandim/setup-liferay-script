@@ -44,8 +44,14 @@ python setup.py --log-level DEBUG -d lportal -e dev /some/liferay/gradle/workspa
 - implement testing
 - fix args help text
 - validate workspace folder (https://github.com/liferay/liferay-blade-cli/blob/feaeddf8251999c262e3004cc8675bc82eb09c7e/cli/src/main/java/com/liferay/blade/cli/gradle/GradleWorkspaceProvider.java#L250)
-- generate executable
+- generate executable and serve it somewhere (github releases?)
+  - pyinstaller isn't working
 - use some commit name validator
 - dynamically check if blade is in the latest version
 - add 3 missing properties: company.default.name (default site name), default.admin.first.name and default.admin.last.name (default admin first and last name)
 - should the wizard env have de dev properties?
+- see how blade prints its version, and validate it right -> see what it prints when there is an update -> see how to get any version within any text with regex
+- add option to delete bundles before initBundle
+- warn while exiting with keyboard interrupt
+- organize the order of the functions
+- refact all to code to improve its logic understanding

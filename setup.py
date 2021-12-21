@@ -164,6 +164,11 @@ def validate_return_code(return_code, error_msg):
         sys.exit(return_code)
 
 
+def is_valid_workspace(workspace_path):
+    # derived from https://github.com/liferay/liferay-blade-cli/blob/master/cli/src/main/java/com/liferay/blade/cli/gradle/GradleWorkspaceProvider.java#L250
+    pass
+
+
 def main():
     validate()
     handle_bundles()

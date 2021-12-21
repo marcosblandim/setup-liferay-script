@@ -47,12 +47,13 @@ args = parser.parse_args()
 
 database_name = args.database
 portal_environment = args.environment
-log_lever = args.log_level
+log_level = args.log_level
 workspace_path = args.workspace_path.resolve()
 
 # config logging
-numeric_level = getattr(logging, log_lever.upper(), DEFAULT_LOG_LEVEL)
-logging.basicConfig(format='%(levelname)s: %(message)s', level=numeric_level)
+numeric_level = getattr(logging, log_level.upper(), DEFAULT_LOG_LEVEL)
+log_format = '%(levelname)s: %(message)s'
+logging.basicConfig(format=log_format, level=numeric_level)
 
 # parse paths
 if not workspace_path.is_dir():
@@ -65,8 +66,8 @@ bundles_properties_file_path = bundles_path / PROPERTIES_FILENAME
 
 def validate_versions():
     blade_version_process = subprocess.run(
-        'blade version', stdout=subprocess.PIPE,
-        cwd=workspace_path, shell=True)
+        ['blade', 'version'], stdout=subprocess.PIPE,
+        cwd=workspace_path)
 
     validate_return_code(blade_version_process.returncode,
                          'couldn\'t validate blade\'s version, exiting')
@@ -85,8 +86,8 @@ def have_bundles():
 
 
 def create_bundles():
-    process = subprocess.run('blade gw initBundle',
-                             cwd=workspace_path, shell=True)
+    process = subprocess.run(['blade', 'gw', 'initBundle'],
+                             cwd=workspace_path)
     validate_return_code(process.returncode,
                          'couldn\'t create bundle, exiting')
 

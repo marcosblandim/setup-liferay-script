@@ -3,7 +3,9 @@ import subprocess
 import configparser
 import argparse
 import sys
-import pathlib
+import os
+from pathlib import Path
+from zipfile import ZipFile
 
 
 DEFAULT_LOG_LEVEL = 'INFO'
@@ -41,7 +43,7 @@ parser.add_argument('-d', '--database', default='lportal',
 parser.add_argument('-e', '--environment', default=WIZ_ENV, type=str.lower, choices=[
                     'common', 'dev', 'docker', 'local', 'prod', 'uat', WIZ_ENV], help='portal environment')
 parser.add_argument('workspace_path', nargs='?', default='.',
-                    type=pathlib.Path, help='path to a Liferay Gradle Workspace')
+                    type=Path, help='path to a Liferay Gradle Workspace')
 
 args = parser.parse_args()
 
@@ -167,6 +169,38 @@ def validate_return_code(return_code, error_msg):
 def is_valid_workspace(workspace_path):
     # derived from https://github.com/liferay/liferay-blade-cli/blob/master/cli/src/main/java/com/liferay/blade/cli/gradle/GradleWorkspaceProvider.java#L250
     pass
+
+
+def get_portal_impl_jar_path():
+    portal_impl_jar_partial_path = 'webapps\ROOT\WEB-INF\lib\portal-impl.jar'
+    bundles_files_and_folders = os.listdir(bundles_path)
+    tomcat_folder_name = next(filter(lambda file_or_folder: file_or_folder.startswith(
+        'tomcat-'), bundles_files_and_folders))
+    return bundles_path / tomcat_folder_name / portal_impl_jar_partial_path
+
+
+def process_liferay_version(liferay_version):
+    return liferay_version.split(':')[1].strip().replace('\r', '').replace('\n', '')
+
+
+def get_liferay_version():
+    manifest_file_path = 'META-INF/MANIFEST.MF'
+    portal_impl_jar_path = get_portal_impl_jar_path()
+    liferay_version = ''
+
+    with ZipFile(portal_impl_jar_path) as zp:
+        with zp.open(manifest_file_path) as manifest_file:
+            for manifest_line in manifest_file:
+                manifest_line_decoded = manifest_line.decode()
+                if manifest_line_decoded.startswith('Liferay-Portal-Release-Info:'):
+                    next_line_decoded = manifest_file.readline().decode()
+                    liferay_version = manifest_line_decoded + next_line_decoded
+
+    if liferay_version == '':
+        # TODO: raise custom error
+        raise Exception('version couldn\'t be defined')
+
+    return process_liferay_version(liferay_version)
 
 
 def main():

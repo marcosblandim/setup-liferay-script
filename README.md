@@ -13,21 +13,21 @@ blade gw initBundle
 - blade ^4.0.9 
 
 ## Usage
-- executes the script with the default values
+1. clone the repository
 ```shell
-python setup.py
+git clone https://github.com/marcosblandim/liferay-setup-script.git
 ```
-- get help
+2. execute it with the default values
 ```shell
-python setup.py --help
-```
-> the same can be achieved by executing the folder instead of the script
-```shell
-python liferay-setup-script --help
+python liferay-setup-script
 ```
 - usage example
 ```shell
-python setup.py --log-level DEBUG -d lportal -e dev /some/liferay/gradle/workspace/path
+python liferay-setup-script --log-level DEBUG -d lportal -e dev /some/liferay/gradle/workspace/path
+```
+> use the following command to get help
+```shell
+python liferay-setup-script --help
 ```
 
 ## Future improvements

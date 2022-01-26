@@ -13,7 +13,7 @@ blade gw initBundle
 - blade ^4.0.9 
 
 ## Usage
-1. clone the repository
+1. clone the repository inside a Liferay Gradle Workspace
 ```shell
 git clone https://github.com/marcosblandim/liferay-setup-script.git
 ```

@@ -32,8 +32,8 @@ setup.wizard.enabled=false'''
 
 # parse args
 github_url = 'https://github.com/marcosblandim/setup-liferay-script/'
-parser = argparse.ArgumentParser(
-    description='Setup Liferay gradle workspace.', epilog=f'for the project docs, go to {github_url}')
+parser = argparse.ArgumentParser(description='Setup a Liferay Gradle Workspace', prog='liferay-setup-script',
+                                 epilog=f'for more information about this project, visit {github_url}', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument('-l', '--log-level', default=DEFAULT_LOG_LEVEL, type=str.upper,
                     choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET'], help='set log level')
 parser.add_argument('-d', '--database', default='lportal',

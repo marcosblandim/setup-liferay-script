@@ -74,7 +74,7 @@ def validate_versions():
 
     blade_version = blade_version_process.stdout.decode('utf-8')
 
-    blade_version_str_list = blade_version.split()[-1].split('.')
+    blade_version_str_list = blade_version.split()[-1].split('.')[0:3]
     blade_version_int_tuple = tuple(int(str_version)
                                     for str_version in blade_version_str_list)
 

@@ -40,7 +40,6 @@ python setup.py --log-level DEBUG -d lportal -e dev /some/liferay/gradle/workspa
 - improve logging
 - external bundle option -> use bundle located outside the workspace
     - validate `liferay.workspace.home.dir` inside `gradle.properties` file
-- flag for reseting `bundles` folder
 - implement testing
 - fix args help text
 - validate workspace folder (https://github.com/liferay/liferay-blade-cli/blob/feaeddf8251999c262e3004cc8675bc82eb09c7e/cli/src/main/java/com/liferay/blade/cli/gradle/GradleWorkspaceProvider.java#L250)
@@ -51,7 +50,9 @@ python setup.py --log-level DEBUG -d lportal -e dev /some/liferay/gradle/workspa
 - add 3 missing properties: company.default.name (default site name), default.admin.first.name and default.admin.last.name (default admin first and last name)
 - should the wizard env have de dev properties?
 - see how blade prints its version, and validate it right -> see what it prints when there is an update -> see how to get any version within any text with regex
-- add option to delete bundles before initBundle
+- add option to delete `bundles` before initBundle
 - warn while exiting with keyboard interrupt
 - organize the order of the functions
 - refact all to code to improve its logic understanding
+- split setup.py in multiple files
+- create a default wizard properties file and check if your default properties are right
